@@ -23,7 +23,13 @@ struct ContentView: View {
             if self.pickedContact != nil {
 
                 HStack {
-                    Image("Dummy")
+                    
+                    Image(uiImage:getImage())
+                        .resizable()
+                        .frame(width:40,height: 40)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white,lineWidth:2))
+                        .shadow(radius:1)
                     VStack(alignment:.leading) {
                         Text("\(pickedContact!.givenName)")
                         Text("\(self.pickedContact!.phoneNumbers.first!.value.stringValue)")
@@ -62,6 +68,13 @@ struct ContentView: View {
             }
         }
     }
+    
+    func getImage() -> UIImage {
+        if ((self.pickedContact?.imageData) != nil) {
+            return UIImage(data:(pickedContact?.imageData)!)!
+          }
+          return UIImage(named:"Dummy")!
+      }
     
     init() {
                        UITableView.appearance().backgroundColor = .clear
