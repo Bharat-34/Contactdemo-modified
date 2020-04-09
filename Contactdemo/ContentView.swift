@@ -23,23 +23,37 @@ struct ContentView: View {
             if self.pickedContact != nil {
 
                 HStack {
+                    if ((self.pickedContact?.imageData) != nil) {
+                        Image(uiImage: UIImage(data: (pickedContact?.imageData)!)!)
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white,lineWidth:2))
+                            .shadow(radius:1)
+                    }else{
+                        Text("\(pickedContact!.givenName.first(char: 1))\(pickedContact!.familyName.first(char: 1))")
+                            .font(.headline)
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.white)
+                            .frame(width:40,height: 40)
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white,lineWidth:0.5))
+                            .shadow(radius:1)
+                    }
                     
-                    Image(uiImage:getImage())
-                        .resizable()
-                        .frame(width:40,height: 40)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.white,lineWidth:2))
-                        .shadow(radius:1)
                     VStack(alignment:.leading) {
-                        Text("\(pickedContact!.givenName)")
+                        Text("\(pickedContact!.givenName) \(pickedContact!.familyName)")
+                            .font(.body)
                         Text("\(self.pickedContact!.phoneNumbers.first!.value.stringValue)")
+                            .font(.body)
+                        Text("\((self.pickedContact?.emailAddresses.first?.value) ?? "")")
+                            .font(.body)
                     }
                 }
-            
             }
-                
+
             }.padding()
-            
             
             if self.pickedContact != nil {
                 Text("\(self.pickedContact!.phoneNumbers.first!.value.stringValue)")
@@ -69,11 +83,22 @@ struct ContentView: View {
         }
     }
     
+//    func getInitail() -> String {
+//        if (self.pickedContact?.familyName) != nil{
+//            return pickedContact?.familyName.utf8.prefix(2)
+//        }
+//
+//        return "tt"
+//    }
+    
+    
+    
+    
     func getImage() -> UIImage {
         if ((self.pickedContact?.imageData) != nil) {
             return UIImage(data:(pickedContact?.imageData)!)!
           }
-          return UIImage(named:"Dummy")!
+        return UIImage(data:(pickedContact?.imageData)!)!
       }
     
     init() {
@@ -82,4 +107,25 @@ struct ContentView: View {
                        UITableView.appearance().tableFooterView = UIView()
             }
    
+}
+
+extension String {
+    
+  func first(char:Int) -> String {
+       return String(self.prefix(char))
+   }
+
+   func last(char:Int) -> String
+   {
+       return String(self.suffix(char))
+   }
+
+   func excludingFirst(char:Int) -> String {
+       return String(self.suffix(self.count - char))
+   }
+
+   func excludingLast(char:Int) -> String
+   {
+        return String(self.prefix(self.count - char))
+   }
 }
